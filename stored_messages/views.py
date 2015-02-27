@@ -49,6 +49,29 @@ class InboxViewSet(viewsets.ViewSet):
         return Response({'status': 'message marked as read'})
 
 
+class ArchiveViewSet(viewsets.ViewSet):
+    """
+    Provides `list` and `detail` actions
+    """
+    def list(self, request):
+        from .settings import stored_messages_settings
+        backend = stored_messages_settings.STORAGE_BACKEND()
+        messages = backend.archive_list(request.user)
+        serializer = InboxSerializer(messages, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        from .settings import stored_messages_settings
+        backend = stored_messages_settings.STORAGE_BACKEND()
+
+        try:
+            msg = backend.archive_get(request.user, pk)
+        except MessageDoesNotExist as e:
+            return Response(e.message, status='404')
+
+        serializer = InboxSerializer(msg, many=False)
+        return Response(serializer.data)
+
 @permission_classes((permissions.IsAuthenticated, ))
 @api_view(['POST'])
 def mark_all_read(request):
