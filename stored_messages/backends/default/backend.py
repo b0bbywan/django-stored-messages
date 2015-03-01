@@ -49,12 +49,12 @@ class DefaultBackend(StoredMessagesBackend):
             MessageArchive.objects.create(user=user, message=msg_instance)
 
     def archive_list(self, user):
-         if user.is_anonymous():
+        if user.is_anonymous():
             return []
-        inbox = MessageArchive.objects.filter(user=user).select_related("message")
-        return [m.message for m in inbox]
+        archive = MessageArchive.objects.filter(user=user).select_related("message")
+        return [m.message for m in archive]
 
-     def archive_get(self, user, msg_id):
+    def archive_get(self, user, msg_id):
         try:
             return MessageArchive.objects.get(pk=msg_id).message
         except MessageArchive.DoesNotExist:
