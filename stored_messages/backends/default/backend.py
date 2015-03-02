@@ -2,7 +2,7 @@ from ..base import StoredMessagesBackend
 from ..exceptions import MessageTypeNotSupported, MessageDoesNotExist
 from ...models import Inbox, Message, MessageArchive
 from django.db import models
-
+from django.contrib.contenttypes.models import ContentType
 
 class DefaultBackend(StoredMessagesBackend):
     """
@@ -42,7 +42,9 @@ class DefaultBackend(StoredMessagesBackend):
         for key in kwargs:
             if key == 'related_history' and isinstance(kwargs[key], list):
                 related_history = kwargs[key]
-            if key == 'tagged_object' and isinstance(kwargs[key], models.Model)
+            if key == 'tagged_object' and isinstance(kwargs[key], models.Model):
+                object_id = kwargs[key].id
+                content_type = ContentType.objects.get_for_model(kwargs[key])
         m_instance = Message.objects.create(message=msg_text, level=level, tags=extra_tags)
         return m_instance
 
