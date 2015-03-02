@@ -10,7 +10,7 @@ BackendClass = stored_messages_settings.STORAGE_BACKEND
 backend = BackendClass()
 
 
-def add_message_for(users, level, message_text, extra_tags='', fail_silently=False):
+def add_message_for(users, level, message_text, extra_tags='', fail_silently=False, **kwargs):
     """
     Send a message to a list of users without passing through `django.contrib.messages`
 
@@ -20,12 +20,12 @@ def add_message_for(users, level, message_text, extra_tags='', fail_silently=Fal
     :param extra_tags: like the Django api, a string containing extra tags for the message
     :param fail_silently: not used at the moment
     """
-    m = backend.create_message(level, message_text, extra_tags)
+    m = backend.create_message(level, message_text, extra_tags, **kwargs)
     backend.archive_store(users, m)
     backend.inbox_store(users, m)
 
 
-def broadcast_message(level, message_text, extra_tags='', fail_silently=False):
+def broadcast_message(level, message_text, extra_tags='', fail_silently=False, **kwargs):
     """
     Send a message to all users aka broadcast.
 
@@ -35,7 +35,7 @@ def broadcast_message(level, message_text, extra_tags='', fail_silently=False):
     :param fail_silently: not used at the moment
     """
     users = get_user_model().objects.all()
-    add_message_for(users, level, message_text, extra_tags=extra_tags, fail_silently=fail_silently)
+    add_message_for(users, level, message_text, extra_tags=extra_tags, fail_silently=fail_silently, **kwargs)
 
 
 def mark_read(user, message):

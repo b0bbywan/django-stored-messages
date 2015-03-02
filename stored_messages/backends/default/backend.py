@@ -1,6 +1,7 @@
 from ..base import StoredMessagesBackend
 from ..exceptions import MessageTypeNotSupported, MessageDoesNotExist
 from ...models import Inbox, Message, MessageArchive
+from django.db import models
 
 
 class DefaultBackend(StoredMessagesBackend):
@@ -37,7 +38,11 @@ class DefaultBackend(StoredMessagesBackend):
         except Inbox.DoesNotExist:
             raise MessageDoesNotExist("Message with id %s does not exist" % msg_id)
 
-    def create_message(self, level, msg_text, extra_tags=''):
+    def create_message(self, level, msg_text, extra_tags='', **kwargs):
+        for key in kwargs:
+            if key == 'related_history' and isinstance(kwargs[key], list):
+                related_history = kwargs[key]
+            if key == 'tagged_object' and isinstance(kwargs[key], models.Model)
         m_instance = Message.objects.create(message=msg_text, level=level, tags=extra_tags)
         return m_instance
 
