@@ -52,7 +52,7 @@ class DefaultBackend(StoredMessagesBackend):
     def archive_list(self, user):
         if user.is_anonymous():
             return []
-        archive = MessageArchive.objects.filter(user=user).select_related("message")
+        archive = MessageArchive.objects.filter(user=user).exclude(message__in=self.inbox_list(user)).select_related("message")
         return [m.message for m in archive]
 
     def archive_get(self, user, msg_id):
