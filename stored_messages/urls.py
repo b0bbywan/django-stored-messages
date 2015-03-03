@@ -10,7 +10,7 @@ if 'rest_framework' in settings.INSTALLED_APPS:
 
     router = DefaultRouter()
     router.register(r'inbox', views.InboxViewSet, base_name='inbox')
-    router.register(r'archive', views.InboxViewSet, base_name='archive')
+    router.register(r'archive', views.ArchiveViewSet, base_name='archive')
 
     urlpatterns = patterns(
         '',
