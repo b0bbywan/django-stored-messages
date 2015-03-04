@@ -29,6 +29,9 @@ class Message(models.Model):
     def __str__(self):
         return self.message
 
+    class Meta:
+        ordering = ['-date']
+
 
 @python_2_unicode_compatible
 class MessageArchive(models.Model):
