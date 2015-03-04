@@ -32,7 +32,6 @@ class Message(models.Model):
     class Meta:
         ordering = ['-date']
 
-
 @python_2_unicode_compatible
 class MessageArchive(models.Model):
     """
