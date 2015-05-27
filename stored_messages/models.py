@@ -25,6 +25,7 @@ class Message(models.Model):
     object_id = models.PositiveIntegerField(blank=True, null=True)
     tagged_object = GenericForeignKey('content_type', 'object_id')
     related_history = models.CommaSeparatedIntegerField(max_length=30, blank=True, null=True)
+    request_user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True)
 
     def __str__(self):
         return self.message
